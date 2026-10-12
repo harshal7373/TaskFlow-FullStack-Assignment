@@ -1,0 +1,1 @@
+export default {darkMode:'class',content:['./index.html','./src/**/*.{js,jsx}'],theme:{extend:{fontFamily:{sans:['Inter','ui-sans-serif','system-ui']},colors:{ink:'#18223d',brand:{50:'#eef2ff',500:'#665cf1',600:'#5549e9',700:'#4537c9'}}}},plugins:[]};

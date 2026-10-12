@@ -1,0 +1,1 @@
+Place screenshots of the real running app here before submission. Suggested names: login.png, register.png, dashboard.png, tasks.png, task-editor.png, team.png, mobile.png, dark-mode.png. Do not submit a screenshot of a mockup as a live deployment screenshot.

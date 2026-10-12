@@ -1,0 +1,19 @@
+import {useEffect,useState} from 'react';import {X} from 'lucide-react';import api,{errorMessage} from '../services/api';import toast from 'react-hot-toast';
+const clean={title:'',description:'',priority:'Medium',dueDate:'',status:'Pending',assignedUser:''};
+export default function TaskModal({task,onClose,onSaved}){
+ const [users,setUsers]=useState([]);const [form,setForm]=useState(clean);const [saving,setSaving]=useState(false);const [error,setError]=useState('');
+ useEffect(()=>{api.get('/users').then(r=>setUsers(r.data)).catch(e=>setError(errorMessage(e)));},[]);
+ useEffect(()=>{setForm(task?{title:task.title,description:task.description||'',priority:task.priority,status:task.status,dueDate:task.dueDate?.slice(0,10)||'',assignedUser:task.assignedUser?._id||task.assignedUser||''}:clean);},[task]);
+ const set=(key,value)=>setForm(f=>({...f,[key]:value}));
+ async function submit(e){e.preventDefault();setError('');setSaving(true);
+ try{if(task)await api.put(`/tasks/${task._id}`,form);else await api.post('/tasks',form);toast.success(task?'Task updated':'Task created');onSaved();onClose();}
+ catch(e){setError(errorMessage(e));}finally{setSaving(false);}}
+ return <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/55 p-4" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)onClose();}}><div role="dialog" aria-modal="true" aria-label={task?'Edit task':'New task'} className="panel w-full max-w-xl max-h-[92vh] overflow-y-auto p-6 shadow-xl">
+  <div className="flex justify-between items-center mb-5"><div><h2 className="text-xl font-bold">{task?'Edit task':'Create a new task'}</h2><p className="text-sm text-slate-500 mt-1">Organize your team’s work in one place.</p></div><button className="btn btn-ghost !p-2" onClick={onClose} aria-label="Close"><X size={20}/></button></div>
+  <form onSubmit={submit} className="space-y-4">{error&&<div role="alert" className="bg-red-50 text-red-700 p-3 rounded-xl text-sm">{error}</div>}
+  <div><label className="form-label" htmlFor="title">Task title *</label><input id="title" required maxLength={120} className="field" value={form.title} onChange={e=>set('title',e.target.value)} placeholder="e.g. Review homepage design"/></div>
+  <div><label className="form-label" htmlFor="description">Description</label><textarea id="description" maxLength={2000} rows={3} className="field" value={form.description} onChange={e=>set('description',e.target.value)} placeholder="Add task details..."/></div>
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4"><div><label className="form-label" htmlFor="priority">Priority *</label><select id="priority" className="field" value={form.priority} onChange={e=>set('priority',e.target.value)}>{['Low','Medium','High'].map(v=><option key={v}>{v}</option>)}</select></div><div><label className="form-label" htmlFor="status">Status *</label><select id="status" className="field" value={form.status} onChange={e=>set('status',e.target.value)}>{['Pending','In Progress','Completed'].map(v=><option key={v}>{v}</option>)}</select></div>
+  <div><label className="form-label" htmlFor="dueDate">Due date *</label><input id="dueDate" required type="date" className="field" value={form.dueDate} onChange={e=>set('dueDate',e.target.value)}/></div><div><label className="form-label" htmlFor="assignedUser">Assigned to *</label><select id="assignedUser" required className="field" value={form.assignedUser} onChange={e=>set('assignedUser',e.target.value)}><option value="">Select member</option>{users.map(u=><option key={u._id} value={u._id}>{u.name}</option>)}</select></div></div>
+  <div className="pt-3 flex justify-end gap-2"><button type="button" className="btn btn-ghost" onClick={onClose}>Cancel</button><button disabled={saving} className="btn btn-primary" type="submit">{saving?'Saving...':task?'Save changes':'Create task'}</button></div></form></div></div>;
+}

@@ -1,0 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@tailwind base;@tailwind components;@tailwind utilities;
+@layer base {body{@apply bg-[#f7f8fc] text-slate-800 dark:bg-[#101426] dark:text-slate-100 antialiased;}input,select,textarea{@apply outline-none;}}
+@layer components {.panel{@apply bg-white dark:bg-[#1c2237] border border-slate-100 dark:border-slate-700/70 rounded-2xl shadow-sm;}.field{@apply w-full rounded-xl border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-800 px-3 py-2.5 text-sm focus:border-brand-500 focus:ring-2 focus:ring-brand-500/10;}.btn{@apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition;}.btn-primary{@apply bg-brand-600 text-white hover:bg-brand-700 disabled:opacity-50;}.btn-ghost{@apply hover:bg-slate-100 dark:hover:bg-slate-700;}.form-label{@apply mb-1.5 block text-sm font-semibold text-slate-600 dark:text-slate-300;}}
